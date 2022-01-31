@@ -13,10 +13,12 @@ def main():
     SPXPC = pd.read_csv('data/SP500.csv')
     NDXPC = pd.read_csv('data/NASDAQCOM.csv')
 
+    print(SPXPC)
+
     # merge data frames
     result = pd.merge(FFR, FFRPC, on='DATE')
-    result = pd.merge(result, SPXPC, on='DATE')
     result = pd.merge(result, NDXPC, on='DATE')
+    result = pd.merge(result, SPXPC, on='DATE')
 
     # prints whole DF
     print(result)
@@ -28,11 +30,11 @@ def main():
         analysis1(result['FEDFUNDS'], result['FEDFUNDS_CH1'], result['SP500_PCH'], i, 'SP500')
 
     # graph data
-    graphData(result, 'NASDAQCOM_PCH', 'SP500_PCH')
+    lineGraphPlot(result, 'NASDAQCOM_PCH', 'SP500_PCH')
 
 ######################################
 # calculates the average return of the
-# SP500 when federal funds rate are
+# given asset when federal funds rate are
 # above a certain range
 ######################################
 def analysis1(FFR, FFRPC, asset, rateToCompare, assetName):
@@ -55,10 +57,19 @@ def analysis1(FFR, FFRPC, asset, rateToCompare, assetName):
         print(f'{assetMean}% is the average return of the {assetName} when the Federal Fund rate changes {rateToCompare} in a month')
         print(f'The average effective fund rate after this increase is {FFRmean}\n')
 
-
-def graphData(df, *columnName):
+######################################
+# graphs data as line graph using
+# columns given in parameters
+######################################
+def lineGraphPlot(df, *columnName):
     df.plot(x = 'DATE', y=['FEDFUNDS', 'FEDFUNDS_CH1', *columnName], kind='line')
     plt.show()
+
+######################################
+# plot data as a histogram (violin)
+######################################
+def violinPlot(df, *columnName):
+    pass
 
 
 main()
